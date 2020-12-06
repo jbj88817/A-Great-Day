@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">A Great Day</string>
+    <string name="today_time_left">Today time left:</string>
+</resources>
