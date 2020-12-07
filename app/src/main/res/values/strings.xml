@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">A Great Day</string>
     <string name="today_time_left">Today time left:</string>
+    <string name="the_most_important_3_things_to_do">The most important 3 things to do:</string>
 </resources>

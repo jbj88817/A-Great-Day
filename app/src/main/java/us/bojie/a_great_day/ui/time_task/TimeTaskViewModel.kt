@@ -7,14 +7,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import us.bojie.a_great_day.data.Task
+import java.text.SimpleDateFormat
 import java.time.*
+import java.util.*
+
 
 class TimeTaskViewModel @ViewModelInject constructor(
-    private val firebaseDB: FirebaseFirestore
+    private val firebaseDB: FirebaseFirestore,
+    private val gson: Gson
 ) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
     val countDownLiveData: LiveData<String> = _countDownLiveData
+
+    private val _todayTasksLiveData = MutableLiveData<List<Task>>()
+    val todayTasksLiveData: LiveData<List<Task>> = _todayTasksLiveData
 
 
     fun startTimer() {
@@ -35,22 +44,33 @@ class TimeTaskViewModel @ViewModelInject constructor(
     }
 
     fun addFireBaseTestData() {
-        // Create a new user with a first, middle, and last name
-        val user = hashMapOf(
-            "first" to "Alan",
-            "middle" to "Mathison",
-            "last" to "Turing",
-            "born" to 1912
-        )
+        val task = Task("test1", "2h")
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val formattedDate: String = df.format(Date())
 
-        // Add a new document with a generated ID
-        firebaseDB.collection("users")
-            .add(user)
+        firebaseDB.collection("tasks").document("jbj88817/${formattedDate}/${task.name}")
+            .set(task)
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+
             }
             .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
+            }
+    }
+
+    fun refreshFirebaseData() {
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val formattedDate: String = df.format(Date())
+        val tasks = mutableListOf<Task>()
+        firebaseDB.collection("tasks/jbj88817/${formattedDate}").get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val jsonElement = gson.toJsonTree(document.data)
+                    tasks.add(gson.fromJson(jsonElement, Task::class.java))
+                }
+                _todayTasksLiveData.value = tasks
+            }
+            .addOnFailureListener { exception ->
             }
     }
 
