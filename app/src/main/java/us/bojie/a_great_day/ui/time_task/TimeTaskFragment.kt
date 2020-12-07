@@ -22,5 +22,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task) {
         viewModel.countDownLiveData.observe(viewLifecycleOwner) {
             binding.tvTime.text = it
         }
+
+        viewModel.addFireBaseTestData()
     }
 }

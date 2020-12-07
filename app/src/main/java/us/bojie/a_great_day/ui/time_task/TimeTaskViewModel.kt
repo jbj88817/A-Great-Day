@@ -1,14 +1,17 @@
 package us.bojie.a_great_day.ui.time_task
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import java.time.*
-import java.util.*
 
-class TimeTaskViewModel @ViewModelInject constructor() : ViewModel() {
+class TimeTaskViewModel @ViewModelInject constructor(
+    private val firebaseDB: FirebaseFirestore
+) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
     val countDownLiveData: LiveData<String> = _countDownLiveData
@@ -31,6 +34,26 @@ class TimeTaskViewModel @ViewModelInject constructor() : ViewModel() {
         }.start()
     }
 
+    fun addFireBaseTestData() {
+        // Create a new user with a first, middle, and last name
+        val user = hashMapOf(
+            "first" to "Alan",
+            "middle" to "Mathison",
+            "last" to "Turing",
+            "born" to 1912
+        )
+
+        // Add a new document with a generated ID
+        firebaseDB.collection("users")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+    }
+
     private fun getEndOfDayInMillis(): Long {
         return LocalDate.now().atTime(LocalTime.MAX).toInstant(
             ZonedDateTime.now(
@@ -38,5 +61,9 @@ class TimeTaskViewModel @ViewModelInject constructor() : ViewModel() {
             ).offset
         ).toEpochMilli() -
                 System.currentTimeMillis()
+    }
+
+    companion object {
+        const val TAG = "TimeTaskViewModel"
     }
 }
