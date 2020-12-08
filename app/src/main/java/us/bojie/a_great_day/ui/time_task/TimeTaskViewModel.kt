@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import us.bojie.a_great_day.data.Task
+import us.bojie.a_great_day.di.UserUID
 import java.text.SimpleDateFormat
 import java.time.*
 import java.util.*
@@ -16,7 +17,8 @@ import java.util.*
 
 class TimeTaskViewModel @ViewModelInject constructor(
     private val firebaseDB: FirebaseFirestore,
-    private val gson: Gson
+    private val gson: Gson,
+    @UserUID private val userUID: String
 ) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
@@ -48,7 +50,7 @@ class TimeTaskViewModel @ViewModelInject constructor(
         val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val formattedDate: String = df.format(Date())
 
-        firebaseDB.collection("tasks").document("jbj88817/${formattedDate}/${task.name}")
+        firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
             .set(task)
             .addOnSuccessListener { documentReference ->
 
@@ -61,7 +63,7 @@ class TimeTaskViewModel @ViewModelInject constructor(
         val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val formattedDate: String = df.format(Date())
         val tasks = mutableListOf<Task>()
-        firebaseDB.collection("tasks/jbj88817/${formattedDate}").get()
+        firebaseDB.collection("tasks/${userUID}/${formattedDate}").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     Log.d(TAG, "${document.id} => ${document.data}")

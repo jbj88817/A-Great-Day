@@ -27,6 +27,7 @@ buildscript {
         testExtJunitVersion = "1.1.2"
         googleServiceVersion = "4.3.4"
         firebaseBOMVersion = "26.1.1"
+        firebaseUIVersion = "7.1.1"
         gsonVersion = "2.8.6"
     }
 
