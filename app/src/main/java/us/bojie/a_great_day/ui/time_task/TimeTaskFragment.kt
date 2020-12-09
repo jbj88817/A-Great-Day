@@ -34,7 +34,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             binding.tvTime.text = it
         }
 
-//        viewModel.addFireBaseTestData()
+        viewModel.addFireBaseTestData()
         viewModel.refreshFirebaseData()
 
         viewModel.todayTasksLiveData.observe(viewLifecycleOwner) {

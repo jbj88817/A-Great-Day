@@ -9,16 +9,19 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import us.bojie.a_great_day.data.Task
+import us.bojie.a_great_day.di.TodayDate
 import us.bojie.a_great_day.di.UserUID
-import java.text.SimpleDateFormat
-import java.time.*
-import java.util.*
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 class TimeTaskViewModel @ViewModelInject constructor(
     private val firebaseDB: FirebaseFirestore,
     private val gson: Gson,
-    @UserUID private val userUID: String
+    @UserUID private val userUID: String,
+    @TodayDate private val formattedDate: String
 ) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
@@ -47,9 +50,6 @@ class TimeTaskViewModel @ViewModelInject constructor(
 
     fun addFireBaseTestData() {
         val task = Task("test1", "2h")
-        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val formattedDate: String = df.format(Date())
-
         firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
             .set(task)
             .addOnSuccessListener { documentReference ->
@@ -60,8 +60,6 @@ class TimeTaskViewModel @ViewModelInject constructor(
     }
 
     fun refreshFirebaseData() {
-        val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val formattedDate: String = df.format(Date())
         val tasks = mutableListOf<Task>()
         firebaseDB.collection("tasks/${userUID}/${formattedDate}").get()
             .addOnSuccessListener { documents ->
