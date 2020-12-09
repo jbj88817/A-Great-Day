@@ -1,16 +1,11 @@
 package us.bojie.a_great_day.ui.time_task
 
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 import us.bojie.a_great_day.data.Task
-import us.bojie.a_great_day.di.TodayDate
-import us.bojie.a_great_day.di.UserUID
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -18,10 +13,6 @@ import java.time.ZonedDateTime
 
 
 class TimeTaskViewModel @ViewModelInject constructor(
-    private val firebaseDB: FirebaseFirestore,
-    private val gson: Gson,
-    @UserUID private val userUID: String,
-    @TodayDate private val formattedDate: String
 ) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
@@ -46,32 +37,6 @@ class TimeTaskViewModel @ViewModelInject constructor(
 
             override fun onFinish() {}
         }.start()
-    }
-
-    fun addFireBaseTestData() {
-        val task = Task("test1", "2h")
-        firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
-            .set(task)
-            .addOnSuccessListener { documentReference ->
-
-            }
-            .addOnFailureListener { e ->
-            }
-    }
-
-    fun refreshFirebaseData() {
-        val tasks = mutableListOf<Task>()
-        firebaseDB.collection("tasks/${userUID}/${formattedDate}").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    val jsonElement = gson.toJsonTree(document.data)
-                    tasks.add(gson.fromJson(jsonElement, Task::class.java))
-                }
-                _todayTasksLiveData.value = tasks
-            }
-            .addOnFailureListener { exception ->
-            }
     }
 
     private fun getEndOfDayInMillis(): Long {

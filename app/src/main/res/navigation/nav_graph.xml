@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph.xml"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
     app:startDestination="@id/timeTaskFragment">
 
     <fragment
         android:id="@+id/timeTaskFragment"
         android:name="us.bojie.a_great_day.ui.time_task.TimeTaskFragment"
-        android:label="TimeTaskFragment" />
+        android:label="TimeTaskFragment" >
+        <action
+            android:id="@+id/action_timeTaskFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditTaskFragment"
+        android:name="us.bojie.a_great_day.ui.add_edit_task.AddEditTaskFragment"
+        android:label="fragment_add_edit_task"
+        tools:layout="@layout/fragment_add_edit_task" />
 </navigation>

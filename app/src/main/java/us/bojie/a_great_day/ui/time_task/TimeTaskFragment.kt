@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import us.bojie.a_great_day.R
@@ -27,15 +28,16 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
             }
+
+            fabAddTask.setOnClickListener {
+                findNavController().navigate(R.id.action_timeTaskFragment_to_addEditTaskFragment)
+            }
         }
 
         viewModel.startTimer()
         viewModel.countDownLiveData.observe(viewLifecycleOwner) {
             binding.tvTime.text = it
         }
-
-        viewModel.addFireBaseTestData()
-        viewModel.refreshFirebaseData()
 
         viewModel.todayTasksLiveData.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
