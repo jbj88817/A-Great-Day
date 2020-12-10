@@ -36,8 +36,16 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 viewModel.taskName = it.toString()
             }
 
-            editTextEstimate.addTextChangedListener {
-                viewModel.taskEstimate = it.toString()
+            numberPicker.apply {
+                val disArray =
+                    arrayOf("0.5h", "1h", "1.5h", "2h", "2.5h", "3h", "3.5h", "4h", "4.5h", "5h")
+                displayedValues = disArray
+                minValue = 0
+                maxValue = 9
+                viewModel.taskEstimate = disArray[0]
+                setOnValueChangedListener { _, _, newVal ->
+                    viewModel.taskEstimate = disArray[newVal]
+                }
             }
 
             fabSaveTask.setOnClickListener {

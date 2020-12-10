@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -15,17 +16,17 @@
             android:id="@+id/edit_text_task_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:hint="@string/task_name"
-            android:inputType="text"
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:inputType="text" />
 
-        <EditText
-            android:id="@+id/edit_text_estimate"
-            android:layout_width="match_parent"
+        <NumberPicker
+            android:id="@+id/number_picker"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/estimate_time"
-            android:inputType="text"
-            android:importantForAutofill="no" />
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/text_view_date_created"
