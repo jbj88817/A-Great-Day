@@ -47,6 +47,7 @@ class TasksAdapter(private val listener: OnItemClickListener) :
             binding.apply {
                 checkBoxCompleted.isChecked = task.completed
                 textViewName.text = task.name
+                textViewEstimate.text = task.estimate
                 textViewName.paint.isStrikeThruText = task.completed
             }
         }

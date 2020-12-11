@@ -34,7 +34,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             }
         }
 
-        viewModel.startTimer()
+        viewModel.init()
         viewModel.countDownLiveData.observe(viewLifecycleOwner) {
             binding.tvTime.text = it
         }

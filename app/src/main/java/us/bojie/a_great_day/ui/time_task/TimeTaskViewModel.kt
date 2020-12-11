@@ -5,7 +5,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import us.bojie.a_great_day.data.Task
+import us.bojie.a_great_day.data.firebase.FirebaseManager
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
@@ -13,6 +16,7 @@ import java.time.ZonedDateTime
 
 
 class TimeTaskViewModel @ViewModelInject constructor(
+    private val firebaseManager: FirebaseManager
 ) : ViewModel() {
 
     private val _countDownLiveData = MutableLiveData<String>()
@@ -21,8 +25,15 @@ class TimeTaskViewModel @ViewModelInject constructor(
     private val _todayTasksLiveData = MutableLiveData<List<Task>>()
     val todayTasksLiveData: LiveData<List<Task>> = _todayTasksLiveData
 
+    fun init() {
+        startTimer()
 
-    fun startTimer() {
+        viewModelScope.launch {
+            _todayTasksLiveData.value = firebaseManager.getTodayTasks()
+        }
+    }
+
+    private fun startTimer() {
         val millisToGo = getEndOfDayInMillis()
 
         object : CountDownTimer(millisToGo, 1000) {
