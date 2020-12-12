@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import dagger.Module
@@ -25,7 +27,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseCloudDatabase() = Firebase.firestore
+    fun provideFirebaseCloudDatabase(): FirebaseFirestore {
+        val db = Firebase.firestore
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
+        db.firestoreSettings = settings
+        return db
+    }
 
     @Provides
     @Singleton

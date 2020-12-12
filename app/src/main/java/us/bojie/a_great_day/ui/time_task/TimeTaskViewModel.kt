@@ -40,6 +40,13 @@ class TimeTaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            firebaseManager.deleteTask(task)
+            _todayTasksLiveData.value = firebaseManager.getTodayTasks()
+        }
+    }
+
     private fun startTimer() {
         val millisToGo = getEndOfDayInMillis()
 

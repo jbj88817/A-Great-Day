@@ -33,6 +33,12 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             fabAddTask.setOnClickListener {
                 findNavController().navigate(R.id.action_timeTaskFragment_to_addEditTaskFragment)
             }
+
+            fabDeleteAllTask.setOnClickListener {
+                taskAdapter.currentList.filter { it.completed }.map {
+                    viewModel.deleteTask(it)
+                }
+            }
         }
 
         viewModel.init()
