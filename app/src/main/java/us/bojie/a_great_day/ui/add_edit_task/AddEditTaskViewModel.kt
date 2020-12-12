@@ -48,8 +48,28 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         updateTask(taskToSave)
     }
 
+    fun onDeleteClick() {
+        if (task != null) {
+            deleteTask(task)
+        } else {
+            viewModelScope.launch {
+                addEditTaskEventChannel.send(
+                    AddEditTaskEvent.NavigateBackWithResult(
+                        EDIT_TASK_RESULT_OK
+                    )
+                )
+            }
+        }
+    }
+
     private fun updateTask(task: Task) = viewModelScope.launch {
         if (firebaseManager.updateTask(task)) {
+            addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
+        }
+    }
+
+    private fun deleteTask(task: Task) = viewModelScope.launch {
+        if (firebaseManager.deleteTask(task)) {
             addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
         }
     }

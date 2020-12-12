@@ -45,6 +45,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 value = if (viewModel.taskEstimate.isNotBlank()) {
                     disArray.indexOf(viewModel.taskEstimate)
                 } else {
+                    viewModel.taskEstimate = disArray[0]
                     0
                 }
                 setOnValueChangedListener { _, _, newVal ->
@@ -54,6 +55,10 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             fabSaveTask.setOnClickListener {
                 viewModel.onSaveClick()
+            }
+
+            fabDeleteTask.setOnClickListener {
+                viewModel.onDeleteClick()
             }
         }
 

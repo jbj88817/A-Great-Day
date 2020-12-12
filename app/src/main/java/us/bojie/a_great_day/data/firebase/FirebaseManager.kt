@@ -22,9 +22,21 @@ class FirebaseManager @Inject constructor(
 
     suspend fun updateTask(task: Task): Boolean {
         return suspendCancellableCoroutine { continuation ->
-
             firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
                 .set(task)
+                .addOnSuccessListener {
+                    continuation.resume(true, null)
+                }
+                .addOnFailureListener { e ->
+                    continuation.resumeWithException(e)
+                }
+        }
+    }
+
+    suspend fun deleteTask(task: Task): Boolean {
+        return suspendCancellableCoroutine { continuation ->
+            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
+                .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)
                 }
