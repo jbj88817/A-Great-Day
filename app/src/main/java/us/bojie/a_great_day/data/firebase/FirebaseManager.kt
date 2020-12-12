@@ -20,7 +20,7 @@ class FirebaseManager @Inject constructor(
     @TodayDate private val formattedDate: String
 ) {
 
-    suspend fun addTask(task: Task): Boolean {
+    suspend fun updateTask(task: Task): Boolean {
         return suspendCancellableCoroutine { continuation ->
 
             firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")

@@ -42,7 +42,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 displayedValues = disArray
                 minValue = 0
                 maxValue = 9
-                viewModel.taskEstimate = disArray[0]
+                value = if (viewModel.taskEstimate.isNotBlank()) {
+                    disArray.indexOf(viewModel.taskEstimate)
+                } else {
+                    0
+                }
                 setOnValueChangedListener { _, _, newVal ->
                     viewModel.taskEstimate = disArray[newVal]
                 }

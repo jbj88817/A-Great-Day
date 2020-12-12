@@ -33,6 +33,12 @@ class TimeTaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            firebaseManager.updateTask(task)
+        }
+    }
+
     private fun startTimer() {
         val millisToGo = getEndOfDayInMillis()
 

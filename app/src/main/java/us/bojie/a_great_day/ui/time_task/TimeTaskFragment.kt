@@ -2,6 +2,7 @@ package us.bojie.a_great_day.ui.time_task
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -42,12 +43,17 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
         viewModel.todayTasksLiveData.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
-
     }
 
     override fun onItemClick(task: Task) {
+        findNavController().navigate(
+            R.id.action_timeTaskFragment_to_addEditTaskFragment, bundleOf(
+                "task" to task
+            )
+        )
     }
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        viewModel.updateTask(task.copy(completed = isChecked))
     }
 }

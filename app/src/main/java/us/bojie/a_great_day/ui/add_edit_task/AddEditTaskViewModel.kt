@@ -49,7 +49,7 @@ class AddEditTaskViewModel @ViewModelInject constructor(
     }
 
     private fun updateTask(task: Task) = viewModelScope.launch {
-        if (firebaseManager.addTask(task)) {
+        if (firebaseManager.updateTask(task)) {
             addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
         }
     }
