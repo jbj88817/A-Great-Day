@@ -38,10 +38,13 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             numberPicker.apply {
                 val disArray =
-                    arrayOf("0.5h", "1h", "1.5h", "2h", "2.5h", "3h", "3.5h", "4h", "4.5h", "5h")
+                    arrayOf(
+                        "0.5h", "1h", "1.5h", "2h", "2.5h", "3h", "3.5h", "4h", "4.5h",
+                        "5h", "5.5h", "6h", "6.5h", "7h", "7.5h", "8h"
+                    )
                 displayedValues = disArray
                 minValue = 0
-                maxValue = 9
+                maxValue = 15
                 value = if (viewModel.taskEstimate.isNotBlank()) {
                     disArray.indexOf(viewModel.taskEstimate)
                 } else {
