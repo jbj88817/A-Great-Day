@@ -5,4 +5,5 @@
     <string name="task_name">Task name</string>
     <string name="estimate_time">Estimate Time</string>
     <string name="add">Add</string>
+    <string name="total_hour">Total hour: %1$sh</string>
 </resources>

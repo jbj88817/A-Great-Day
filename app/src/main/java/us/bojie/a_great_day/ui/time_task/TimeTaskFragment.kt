@@ -46,8 +46,24 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             binding.tvTime.text = it
         }
 
-        viewModel.todayTasksLiveData.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+        viewModel.todayTasksLiveData.observe(viewLifecycleOwner) { tasks ->
+            setupTotalHours(tasks, binding)
+            taskAdapter.submitList(tasks)
+        }
+    }
+
+    private fun setupTotalHours(
+        tasks: List<Task>,
+        binding: FragmentTimeTaskBinding
+    ) {
+        var totalHours = 0f
+        tasks.map {
+            val estimateStr = it.estimate
+            totalHours += estimateStr.substring(0, estimateStr.indexOf("h")).toFloat()
+        }
+        if (totalHours.toString() != "0.0") {
+            binding.textViewTotalHour.text =
+                getString(R.string.total_hour, totalHours.toString())
         }
     }
 
