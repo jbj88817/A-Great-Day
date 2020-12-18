@@ -63,8 +63,16 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun onSkipToNextDayClick() = viewModelScope.launch {
+        if (task == null) return@launch
+        if (firebaseManager.updateTaskToNextDay(task)) {
+            addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
+        }
+    }
+
+
     private fun updateTask(task: Task, oldTaskName: String?) = viewModelScope.launch {
-        if (firebaseManager.updateTask(task, oldTaskName)) {
+        if (firebaseManager.updateTask(task, oldTaskName = oldTaskName)) {
             addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
         }
     }

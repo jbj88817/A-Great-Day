@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import us.bojie.a_great_day.ui.MainActivity
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Qualifier
 
@@ -23,6 +24,11 @@ class StringModule {
     @Provides
     fun provideTodayFormattedDate(): String =
         SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+    @NextDate
+    @Provides
+    fun provideNextDayFormattedDate(@TodayDate todayDate: String): String =
+        LocalDate.parse(todayDate).plusDays(1).toString()
 }
 
 @Retention(AnnotationRetention.RUNTIME)
@@ -32,3 +38,7 @@ annotation class UserUID
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
 annotation class TodayDate
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class NextDate

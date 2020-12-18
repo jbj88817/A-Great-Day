@@ -29,9 +29,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         binding.apply {
             editTextTaskName.setText(viewModel.taskName)
-            viewModel.oldTaskName = if (viewModel.taskName.isNotBlank()) viewModel.taskName else null
+            viewModel.oldTaskName =
+                if (viewModel.taskName.isNotBlank()) viewModel.taskName else null
             textViewDateCreated.isVisible = viewModel.task != null
-            textViewDateCreated.text = "Created: ${viewModel.task?.createdDateFormatted}"
+            textViewDateCreated.text =
+                getString(R.string.created, viewModel.task?.createdDateFormatted)
 
             editTextTaskName.addTextChangedListener {
                 viewModel.taskName = it.toString()
@@ -64,6 +66,16 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             fabDeleteTask.setOnClickListener {
                 viewModel.onDeleteClick()
             }
+
+            fabNextDay.apply {
+                visibility = if (viewModel.taskName.isNotBlank())
+                    View.VISIBLE
+                else View.GONE
+                setOnClickListener {
+                    viewModel.onSkipToNextDayClick()
+                }
+            }
+
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

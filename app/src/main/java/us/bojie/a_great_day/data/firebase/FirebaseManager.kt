@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.suspendCancellableCoroutine
 import us.bojie.a_great_day.data.Task
+import us.bojie.a_great_day.di.NextDate
 import us.bojie.a_great_day.di.TodayDate
 import us.bojie.a_great_day.di.UserUID
 import us.bojie.a_great_day.ui.time_task.TimeTaskViewModel
@@ -17,10 +18,15 @@ class FirebaseManager @Inject constructor(
     private val firebaseDB: FirebaseFirestore,
     private val gson: Gson,
     @UserUID private val userUID: String,
-    @TodayDate private val formattedDate: String
+    @TodayDate private val formattedToday: String,
+    @NextDate private val formattedNextDay: String
 ) {
 
-    suspend fun updateTask(task: Task, oldTaskName: String? = null): Boolean {
+    suspend fun updateTask(
+        task: Task,
+        formattedDate: String = formattedToday,
+        oldTaskName: String? = null,
+    ): Boolean {
         oldTaskName?.also { deleteTaskName(oldTaskName) }
         return suspendCancellableCoroutine { continuation ->
             firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
@@ -34,9 +40,14 @@ class FirebaseManager @Inject constructor(
         }
     }
 
+    suspend fun updateTaskToNextDay(task: Task): Boolean {
+        deleteTask(task)
+        return updateTask(task, formattedNextDay)
+    }
+
     suspend fun deleteTask(task: Task): Boolean {
         return suspendCancellableCoroutine { continuation ->
-            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
+            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${task.name}")
                 .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)
@@ -49,7 +60,7 @@ class FirebaseManager @Inject constructor(
 
     private suspend fun deleteTaskName(taskName: String): Boolean {
         return suspendCancellableCoroutine { continuation ->
-            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${taskName}")
+            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${taskName}")
                 .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)
@@ -63,7 +74,7 @@ class FirebaseManager @Inject constructor(
     suspend fun getTodayTasks(): List<Task> {
         return suspendCancellableCoroutine { continuation ->
             val tasks = mutableListOf<Task>()
-            firebaseDB.collection("tasks/${userUID}/${formattedDate}").get()
+            firebaseDB.collection("tasks/${userUID}/${formattedToday}").get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
                         Log.d(TimeTaskViewModel.TAG, "${document.id} => ${document.data}")
