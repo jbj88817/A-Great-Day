@@ -20,7 +20,8 @@ class FirebaseManager @Inject constructor(
     @TodayDate private val formattedDate: String
 ) {
 
-    suspend fun updateTask(task: Task): Boolean {
+    suspend fun updateTask(task: Task, oldTaskName: String? = null): Boolean {
+        oldTaskName?.also { deleteTaskName(oldTaskName) }
         return suspendCancellableCoroutine { continuation ->
             firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
                 .set(task)
@@ -36,6 +37,19 @@ class FirebaseManager @Inject constructor(
     suspend fun deleteTask(task: Task): Boolean {
         return suspendCancellableCoroutine { continuation ->
             firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
+                .delete()
+                .addOnSuccessListener {
+                    continuation.resume(true, null)
+                }
+                .addOnFailureListener { e ->
+                    continuation.resumeWithException(e)
+                }
+        }
+    }
+
+    private suspend fun deleteTaskName(taskName: String): Boolean {
+        return suspendCancellableCoroutine { continuation ->
+            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${taskName}")
                 .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)

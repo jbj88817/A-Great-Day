@@ -17,6 +17,7 @@ class AddEditTaskViewModel @ViewModelInject constructor(
     private val firebaseManager: FirebaseManager
 ) : ViewModel() {
 
+    var oldTaskName: String? = null
     val task = state.get<Task>("task")
 
     var taskName = state.get<String>("taskName") ?: task?.name ?: ""
@@ -45,7 +46,7 @@ class AddEditTaskViewModel @ViewModelInject constructor(
             estimate = taskEstimate
         )
 
-        updateTask(taskToSave)
+        updateTask(taskToSave, oldTaskName)
     }
 
     fun onDeleteClick() {
@@ -62,8 +63,8 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun updateTask(task: Task) = viewModelScope.launch {
-        if (firebaseManager.updateTask(task)) {
+    private fun updateTask(task: Task, oldTaskName: String?) = viewModelScope.launch {
+        if (firebaseManager.updateTask(task, oldTaskName)) {
             addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
         }
     }
