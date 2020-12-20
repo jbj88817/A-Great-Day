@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val RC_SIGN_IN = 100
         const val USER_UID = "user_uid"
+        const val TOTAL_HOURS_TEXT = "total_hours_text"
         const val ADD_TASK_RESULT_OK = Activity.RESULT_FIRST_USER
         const val EDIT_TASK_RESULT_OK = Activity.RESULT_FIRST_USER + 1
     }

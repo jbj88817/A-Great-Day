@@ -1,5 +1,6 @@
 package us.bojie.a_great_day.ui.time_task
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -11,11 +12,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import us.bojie.a_great_day.R
 import us.bojie.a_great_day.data.Task
 import us.bojie.a_great_day.databinding.FragmentTimeTaskBinding
+import us.bojie.a_great_day.ui.MainActivity
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnItemClickListener {
 
     private val viewModel: TimeTaskViewModel by viewModels()
+
+    @Inject
+    lateinit var pref: SharedPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,12 +67,13 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             val estimateStr = it.estimate
             totalHours += estimateStr.substring(0, estimateStr.indexOf("h")).toFloat()
         }
-        if (totalHours.toString() != "0.0") {
-            binding.textViewTotalHour.text =
-                getString(R.string.total_hour, totalHours.toString())
+        val totalHoursText = if (totalHours.toString() != "0.0") {
+            getString(R.string.total_hour, totalHours.toString())
         } else {
-            binding.textViewTotalHour.text = getString(R.string.all_tasks_completed)
+            getString(R.string.all_tasks_completed)
         }
+        binding.textViewTotalHour.text = totalHoursText
+        pref.edit().putString(MainActivity.TOTAL_HOURS_TEXT, totalHoursText).apply()
     }
 
     override fun onItemClick(task: Task) {
