@@ -2,13 +2,17 @@ package us.bojie.a_great_day.ui.time_task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import us.bojie.a_great_day.data.Task
 import us.bojie.a_great_day.databinding.ItemTaskBinding
 
-class TasksAdapter(private val listener: OnItemClickListener) :
+class TasksAdapter(
+    private val listener: OnItemClickListener,
+    private val viewModel: TimeTaskViewModel
+) :
     ListAdapter<Task, TasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
@@ -50,6 +54,14 @@ class TasksAdapter(private val listener: OnItemClickListener) :
                 textViewEstimate.text = task.estimate
                 textViewName.paint.isStrikeThruText = task.completed
             }
+        }
+
+        fun onReorder(from: Int?, to: Int?) {
+            if (from == null || to == null) return
+            val movedItem = getItem(to)
+            val draggedItem = getItem(from)
+            viewModel.updateTask(draggedItem.copy(order = to), false)
+            viewModel.updateTask(movedItem.copy(order = from), false)
         }
     }
 

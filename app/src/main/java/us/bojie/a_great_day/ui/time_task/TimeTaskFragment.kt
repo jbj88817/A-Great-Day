@@ -7,7 +7,10 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import us.bojie.a_great_day.R
 import us.bojie.a_great_day.data.Task
@@ -19,6 +22,7 @@ import javax.inject.Inject
 class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnItemClickListener {
 
     private val viewModel: TimeTaskViewModel by viewModels()
+    private lateinit var taskAdapter: TasksAdapter
 
     @Inject
     lateinit var pref: SharedPreferences
@@ -27,7 +31,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
         super.onViewCreated(view, savedInstanceState)
 
         val binding: FragmentTimeTaskBinding = FragmentTimeTaskBinding.bind(view)
-        val taskAdapter = TasksAdapter(this)
+        taskAdapter = TasksAdapter(this, viewModel)
 
         binding.apply {
             recyclerViewTasks.apply {
@@ -35,9 +39,14 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
             }
+            itemTouchHelper.attachToRecyclerView(recyclerViewTasks)
 
             fabAddTask.setOnClickListener {
-                findNavController().navigate(R.id.action_timeTaskFragment_to_addEditTaskFragment)
+                findNavController().navigate(
+                    R.id.action_timeTaskFragment_to_addEditTaskFragment, bundleOf(
+                        "taskListSize" to taskAdapter.currentList.size
+                    )
+                )
             }
 
             fabDeleteAllTask.setOnClickListener {
@@ -54,7 +63,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
 
         viewModel.todayTasksLiveData.observe(viewLifecycleOwner) { tasks ->
             setupTotalHours(tasks, binding)
-            taskAdapter.submitList(tasks)
+            taskAdapter.submitList(tasks.sortedBy { it.order })
         }
     }
 
@@ -80,10 +89,68 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
         pref.edit().putString(MainActivity.TOTAL_HOURS_TEXT, totalHoursText).apply()
     }
 
+    private val itemTouchHelper by lazy {
+        val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                UP or
+                        DOWN or
+                        START or
+                        END, 0
+            ) {
+
+                var from:Int? = null
+                var to:Int? = null
+                var saveHolder: RecyclerView.ViewHolder? = null
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val adapter = recyclerView.adapter as TasksAdapter
+                    val formPos = viewHolder.adapterPosition
+                    to = target.adapterPosition
+                    adapter.notifyItemMoved(formPos, to!!)
+                    return true
+                }
+
+                override fun onSelectedChanged(
+                    viewHolder: RecyclerView.ViewHolder?,
+                    actionState: Int
+                ) {
+                    super.onSelectedChanged(viewHolder, actionState)
+
+                    if (actionState == ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                        from = viewHolder?.adapterPosition ?: 0
+                        saveHolder = viewHolder
+                    } else if (actionState == ACTION_STATE_IDLE) {
+                        (saveHolder as TasksAdapter.TasksViewHolder).onReorder(from, to)
+                    }
+                }
+
+                override fun clearView(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ) {
+                    super.clearView(recyclerView, viewHolder)
+                    viewHolder.itemView.alpha = 1.0f
+                }
+
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                }
+            }
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
+
     override fun onItemClick(task: Task) {
         findNavController().navigate(
             R.id.action_timeTaskFragment_to_addEditTaskFragment, bundleOf(
-                "task" to task
+                "task" to task,
+                "taskListSize" to taskAdapter.currentList.size
             )
         )
     }

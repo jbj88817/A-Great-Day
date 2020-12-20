@@ -30,10 +30,12 @@ class TimeTaskViewModel @ViewModelInject constructor(
         }
     }
 
-    fun updateTask(task: Task) {
+    fun updateTask(task: Task, needRefresh: Boolean = true) {
         viewModelScope.launch {
             firebaseManager.updateTask(task)
-            _todayTasksLiveData.value = firebaseManager.getTodayTasks()
+            if (needRefresh) {
+                _todayTasksLiveData.value = firebaseManager.getTodayTasks()
+            }
         }
     }
 

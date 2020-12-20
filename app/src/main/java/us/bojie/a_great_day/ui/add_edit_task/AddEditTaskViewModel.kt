@@ -19,6 +19,7 @@ class AddEditTaskViewModel @ViewModelInject constructor(
 
     var oldTaskName: String? = null
     val task = state.get<Task>("task")
+    private val taskListSize = state.get<Int>("taskListSize")
 
     var taskName = state.get<String>("taskName") ?: task?.name ?: ""
         set(value) {
@@ -41,10 +42,13 @@ class AddEditTaskViewModel @ViewModelInject constructor(
             return
         }
 
-        val taskToSave = task?.copy(name = taskName, estimate = taskEstimate) ?: Task(
-            name = taskName,
-            estimate = taskEstimate
-        )
+        val taskPosition = task?.order ?: taskListSize
+        val taskToSave =
+            task?.copy(name = taskName, estimate = taskEstimate) ?: Task(
+                name = taskName,
+                estimate = taskEstimate,
+                order = taskPosition
+            )
 
         updateTask(taskToSave, oldTaskName)
     }
