@@ -29,7 +29,7 @@ class FirebaseManager @Inject constructor(
     ): Boolean {
         oldTaskName?.also { deleteTaskName(oldTaskName) }
         return suspendCancellableCoroutine { continuation ->
-            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name}")
+            firebaseDB.collection("tasks").document("${userUID}/${formattedDate}/${task.name.hashCode()}")
                 .set(task)
                 .addOnSuccessListener {
                     continuation.resume(true, null)
@@ -47,7 +47,7 @@ class FirebaseManager @Inject constructor(
 
     suspend fun deleteTask(task: Task): Boolean {
         return suspendCancellableCoroutine { continuation ->
-            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${task.name}")
+            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${task.name.hashCode()}")
                 .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)
@@ -60,7 +60,7 @@ class FirebaseManager @Inject constructor(
 
     private suspend fun deleteTaskName(taskName: String): Boolean {
         return suspendCancellableCoroutine { continuation ->
-            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${taskName}")
+            firebaseDB.collection("tasks").document("${userUID}/${formattedToday}/${taskName.hashCode()}")
                 .delete()
                 .addOnSuccessListener {
                     continuation.resume(true, null)

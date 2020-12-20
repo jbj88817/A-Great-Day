@@ -7,4 +7,5 @@
     <string name="add">Add</string>
     <string name="total_hour">Total hour: %1$sh</string>
     <string name="created">Created: %1$s</string>
+    <string name="all_tasks_completed">All tasks are completed, free play for you:)</string>
 </resources>
