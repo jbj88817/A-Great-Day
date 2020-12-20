@@ -34,14 +34,14 @@ class TimeTaskAppWidgetProvider : AppWidgetProvider() {
             // to the button
             val views = RemoteViews(context.packageName, R.layout.appwidget_time_task)
             views.setOnClickPendingIntent(R.id.tv_countdown_time, pendingIntent)
-            views.setTextViewText(
-                R.id.tv_total_hours,
-                pref.getString(MainActivity.TOTAL_HOURS_TEXT, null)
-            )
             val millis = Util.getEndOfDayInMillis()
             CountDown(millis, 1000) {
                 // Tell the AppWidgetManager to perform an update on the current app widget
                 views.setTextViewText(R.id.tv_countdown_time, it)
+                views.setTextViewText(
+                    R.id.tv_total_hours,
+                    pref.getString(MainActivity.TOTAL_HOURS_TEXT, null)
+                )
                 appWidgetManager.updateAppWidget(element, views)
             }.start()
         }

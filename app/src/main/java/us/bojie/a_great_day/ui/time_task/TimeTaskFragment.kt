@@ -63,12 +63,16 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
         binding: FragmentTimeTaskBinding
     ) {
         var totalHours = 0f
-        tasks.filter { !it.completed }.map {
+        var totalHoursLeft = 0f
+        tasks.map {
             val estimateStr = it.estimate
+            if (!it.completed) {
+                totalHoursLeft += estimateStr.substring(0, estimateStr.indexOf("h")).toFloat()
+            }
             totalHours += estimateStr.substring(0, estimateStr.indexOf("h")).toFloat()
         }
-        val totalHoursText = if (totalHours.toString() != "0.0") {
-            getString(R.string.total_hour, totalHours.toString())
+        val totalHoursText = if (totalHoursLeft.toString() != "0.0") {
+            getString(R.string.total_hour, totalHoursLeft.toString(), totalHours.toString())
         } else {
             getString(R.string.all_tasks_completed)
         }
