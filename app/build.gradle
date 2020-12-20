@@ -92,6 +92,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
+
+    // ThreeTen Backport for time
+    implementation "org.threeten:threetenbp:$threetenbpVersion"
 }
 
 kapt {

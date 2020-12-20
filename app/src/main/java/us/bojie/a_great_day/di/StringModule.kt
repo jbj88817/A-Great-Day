@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import org.threeten.bp.LocalDate
 import us.bojie.a_great_day.ui.MainActivity
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import javax.inject.Qualifier
 
