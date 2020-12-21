@@ -38,6 +38,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
                 adapter = taskAdapter
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
+                itemAnimator = null
             }
             itemTouchHelper.attachToRecyclerView(recyclerViewTasks)
 
@@ -98,8 +99,8 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
                         END, 0
             ) {
 
-                var from:Int? = null
-                var to:Int? = null
+                var from: Int? = null
+                var to: Int? = null
                 var saveHolder: RecyclerView.ViewHolder? = null
 
                 override fun onMove(
