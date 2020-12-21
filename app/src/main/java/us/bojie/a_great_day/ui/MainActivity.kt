@@ -27,20 +27,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (userUID == "-1") {
-            googleSignIn()
+        if (userUID == "-1" || FirebaseAuth.getInstance().currentUser == null) {
+            signIn()
         }
     }
 
-    private fun googleSignIn() {
+    fun signIn() {
         val providers = arrayListOf(
-            AuthUI.IdpConfig.GoogleBuilder().build()
+            AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.EmailBuilder().build()
         )
 
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
+                .setLogo(R.drawable.todo)
                 .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
                 .build(),
             RC_SIGN_IN
         )
@@ -58,10 +61,7 @@ class MainActivity : AppCompatActivity() {
                 pref.edit().putString(USER_UID, user?.uid).apply()
                 // ...
             } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
+                finish()
             }
         }
     }
