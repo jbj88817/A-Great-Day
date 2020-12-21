@@ -58,10 +58,23 @@ class TasksAdapter(
 
         fun onReorder(from: Int?, to: Int?) {
             if (from == null || to == null) return
-            val movedItem = getItem(to)
-            val draggedItem = getItem(from)
-            viewModel.updateTask(draggedItem.copy(order = to), false)
-            viewModel.updateTask(movedItem.copy(order = from), false)
+            if (from > to) {
+                val draggedItem = getItem(from)
+                viewModel.updateTask(draggedItem.copy(order = to), false)
+                for (i in to..from) {
+                    val item = getItem(i)
+                    viewModel.updateTask(item.copy(order = i + 1), false)
+                }
+                viewModel.updateTask(draggedItem.copy(order = to))
+            } else if (from < to) {
+                val draggedItem = getItem(from)
+                viewModel.updateTask(draggedItem.copy(order = to), false)
+                for (i in from..to) {
+                    val item = getItem(i)
+                    viewModel.updateTask(item.copy(order = i - 1), false)
+                }
+                viewModel.updateTask(draggedItem.copy(order = to))
+            }
         }
     }
 
