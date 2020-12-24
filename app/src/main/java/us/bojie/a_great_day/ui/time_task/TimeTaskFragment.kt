@@ -27,6 +27,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
 
     private val viewModel: TimeTaskViewModel by viewModels()
     private lateinit var taskAdapter: TasksAdapter
+    private lateinit var binding: FragmentTimeTaskBinding
 
     @Inject
     lateinit var pref: SharedPreferences
@@ -39,7 +40,7 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding: FragmentTimeTaskBinding = FragmentTimeTaskBinding.bind(view)
+        binding = FragmentTimeTaskBinding.bind(view)
         taskAdapter = TasksAdapter(this, viewModel)
 
         binding.apply {
@@ -166,7 +167,23 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
     }
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
-        viewModel.updateTask(task.copy(completed = isChecked))
+        if (isChecked) {
+            val viewHolder =
+                binding.recyclerViewTasks.findViewHolderForAdapterPosition(task.order ?: return)
+            (viewHolder as TasksAdapter.TasksViewHolder).onReorder(
+                task.order,
+                taskAdapter.currentList.size - 1
+            )
+            viewModel.updateTask(
+                task.copy(
+                    completed = isChecked,
+                    order = taskAdapter.currentList.size - 1
+                )
+            )
+        } else {
+            viewModel.updateTask(task.copy(completed = isChecked))
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
