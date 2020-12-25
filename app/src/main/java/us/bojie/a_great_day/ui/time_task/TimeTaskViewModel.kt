@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import us.bojie.a_great_day.app_widget.CountDown
 import us.bojie.a_great_day.data.Task
@@ -25,6 +26,12 @@ class TimeTaskViewModel @ViewModelInject constructor(
     fun init() {
         startTimer()
 
+        viewModelScope.launch {
+            _todayTasksLiveData.value = firebaseManager.getTodayTasks()
+        }
+    }
+
+    fun refreshTask() {
         viewModelScope.launch {
             _todayTasksLiveData.value = firebaseManager.getTodayTasks()
         }

@@ -78,6 +78,10 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
         }
     }
 
+    fun refreshTask() {
+        viewModel.refreshTask()
+    }
+
     private fun setupTotalHours(
         tasks: List<Task>,
         binding: FragmentTimeTaskBinding

@@ -10,7 +10,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import us.bojie.a_great_day.R
-import us.bojie.a_great_day.di.UserUID
+import us.bojie.a_great_day.ui.time_task.TimeTaskFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -19,14 +19,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var pref: SharedPreferences
 
-    @Inject
-    @UserUID
-    lateinit var userUID: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val userUID = pref.getString(USER_UID, "-1") ?: "-1"
         if (userUID == "-1" || FirebaseAuth.getInstance().currentUser == null) {
             signIn()
         }
@@ -59,7 +55,12 @@ class MainActivity : AppCompatActivity() {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
                 pref.edit().putString(USER_UID, user?.uid).apply()
-                // ...
+                val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                navHost?.let { navFragment ->
+                    navFragment.childFragmentManager.primaryNavigationFragment?.let { fragment ->
+                        (fragment as TimeTaskFragment).refreshTask()
+                    }
+                }
             } else {
                 finish()
             }
