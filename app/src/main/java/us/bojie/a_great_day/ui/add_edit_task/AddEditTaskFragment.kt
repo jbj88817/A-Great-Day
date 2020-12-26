@@ -29,6 +29,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         binding.apply {
             editTextTaskName.setText(viewModel.taskName)
+            editTextTaskName.requestFocus()
             viewModel.oldTaskName =
                 if (viewModel.taskName.isNotBlank()) viewModel.taskName else null
             textViewDateCreated.isVisible = viewModel.task != null

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import us.bojie.a_great_day.R
@@ -184,6 +185,11 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
                     order = taskAdapter.currentList.size - 1
                 )
             )
+            Snackbar.make(
+                requireView(),
+                getString(R.string.task_marked_as_completed),
+                Snackbar.LENGTH_LONG
+            ).show()
         } else {
             viewModel.updateTask(task.copy(completed = isChecked))
         }

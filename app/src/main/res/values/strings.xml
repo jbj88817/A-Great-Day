@@ -9,4 +9,5 @@
     <string name="created">Created: %1$s</string>
     <string name="all_tasks_completed">All tasks are completed, free play for you:)</string>
     <string name="sign_out">Sign out</string>
+    <string name="task_marked_as_completed">Task marked as completed</string>
 </resources>
