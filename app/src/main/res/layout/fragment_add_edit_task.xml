@@ -62,4 +62,12 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/ic_skip_next" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_set_recur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_repeat" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

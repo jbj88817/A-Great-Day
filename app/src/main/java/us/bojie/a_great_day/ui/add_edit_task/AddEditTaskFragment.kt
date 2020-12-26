@@ -77,6 +77,9 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 }
             }
 
+            fabSetRecur.setOnClickListener {
+                viewModel.onSetRecurClick()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

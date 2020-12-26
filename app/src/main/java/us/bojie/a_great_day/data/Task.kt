@@ -13,6 +13,7 @@ data class Task(
     val estimate: String,
     val completed: Boolean = false,
     val order: Int? = null,
+    val repeat: Int? = null,
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) : Parcelable {

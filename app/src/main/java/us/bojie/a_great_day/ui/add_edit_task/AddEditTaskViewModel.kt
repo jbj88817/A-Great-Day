@@ -67,6 +67,11 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun onSetRecurClick() {
+
+    }
+
+
     fun onSkipToNextDayClick() = viewModelScope.launch {
         if (task == null) return@launch
         if (firebaseManager.updateTaskToNextDay(task)) {
