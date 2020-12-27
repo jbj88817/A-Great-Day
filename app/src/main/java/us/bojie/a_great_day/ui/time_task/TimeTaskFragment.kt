@@ -188,8 +188,17 @@ class TimeTaskFragment : Fragment(R.layout.fragment_time_task), TasksAdapter.OnI
             Snackbar.make(
                 requireView(),
                 getString(R.string.task_marked_as_completed),
-                Snackbar.LENGTH_LONG
+                Snackbar.LENGTH_SHORT
             ).show()
+
+            if (task.repeat == 1) {
+                viewModel.createNextDayRepeatTask(task)
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.task_next_cycle_created),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         } else {
             viewModel.updateTask(task.copy(completed = isChecked))
         }

@@ -1,12 +1,10 @@
 package us.bojie.a_great_day.di
 
-import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.threeten.bp.LocalDate
-import us.bojie.a_great_day.ui.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Qualifier

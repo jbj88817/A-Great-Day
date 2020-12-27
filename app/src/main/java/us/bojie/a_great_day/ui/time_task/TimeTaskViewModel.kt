@@ -12,7 +12,6 @@ import us.bojie.a_great_day.data.Task
 import us.bojie.a_great_day.data.firebase.FirebaseManager
 import us.bojie.a_great_day.util.Util
 
-
 class TimeTaskViewModel @ViewModelInject constructor(
     private val firebaseManager: FirebaseManager
 ) : ViewModel() {
@@ -53,6 +52,10 @@ class TimeTaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun createNextDayRepeatTask(task: Task) = viewModelScope.launch {
+        firebaseManager.updateTaskToNextDay(task, false)
+    }
+
     private fun startTimer() {
         val millisToGo = Util.getEndOfDayInMillis()
 
@@ -65,3 +68,4 @@ class TimeTaskViewModel @ViewModelInject constructor(
         const val TAG = "TimeTaskViewModel"
     }
 }
+

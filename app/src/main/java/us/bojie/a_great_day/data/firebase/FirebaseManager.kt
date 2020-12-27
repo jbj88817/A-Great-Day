@@ -43,8 +43,10 @@ class FirebaseManager @Inject constructor(
         }
     }
 
-    suspend fun updateTaskToNextDay(task: Task): Boolean {
-        deleteTask(task)
+    suspend fun updateTaskToNextDay(task: Task, needDelete: Boolean = true): Boolean {
+        if (needDelete) {
+            deleteTask(task)
+        }
         return updateTask(task, formattedNextDay)
     }
 

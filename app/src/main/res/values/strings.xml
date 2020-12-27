@@ -10,4 +10,10 @@
     <string name="all_tasks_completed">All tasks are completed, free play for you:)</string>
     <string name="sign_out">Sign out</string>
     <string name="task_marked_as_completed">Task marked as completed</string>
+    <string name="task_next_cycle_created">Next cycle of task has created</string>
+    <string name="repeat">Repeat</string>
+    <string name="no_repeat">No repeat</string>
+    <string name="daily">Daily</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 </resources>

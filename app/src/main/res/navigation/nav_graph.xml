@@ -17,5 +17,13 @@
         android:id="@+id/addEditTaskFragment"
         android:name="us.bojie.a_great_day.ui.add_edit_task.AddEditTaskFragment"
         android:label="fragment_add_edit_task"
-        tools:layout="@layout/fragment_add_edit_task" />
+        tools:layout="@layout/fragment_add_edit_task" >
+        <action
+            android:id="@+id/action_addEditTaskFragment_to_recurDialog"
+            app:destination="@id/recurDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/recurDialog"
+        android:name="us.bojie.a_great_day.ui.add_edit_task.RecurDialog"
+        android:label="RecurDialog" />
 </navigation>

@@ -78,7 +78,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             fabSetRecur.setOnClickListener {
-                viewModel.onSetRecurClick()
+                viewModel.onSetRecurButtonClicked()
             }
         }
 
@@ -95,6 +95,12 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                             bundleOf("add_edit_result" to event.result)
                         )
                         findNavController().popBackStack()
+                    }
+                    is AddEditTaskViewModel.AddEditTaskEvent.NavigateToRecurDialog -> {
+                        findNavController().navigate(
+                            R.id.action_addEditTaskFragment_to_recurDialog,
+                            bundleOf("task" to event.task)
+                        )
                     }
                 }.exhaustive
             }

@@ -67,11 +67,6 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onSetRecurClick() {
-
-    }
-
-
     fun onSkipToNextDayClick() = viewModelScope.launch {
         if (task == null) return@launch
         if (firebaseManager.updateTaskToNextDay(task)) {
@@ -96,8 +91,13 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         addEditTaskEventChannel.send(AddEditTaskEvent.ShowInvalidInputMessage(text))
     }
 
+    fun onSetRecurButtonClicked() = viewModelScope.launch {
+        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateToRecurDialog(task ?: return@launch))
+    }
+
     sealed class AddEditTaskEvent {
         data class ShowInvalidInputMessage(val msg: String) : AddEditTaskEvent()
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
+        data class NavigateToRecurDialog(val task: Task) : AddEditTaskEvent()
     }
 }
