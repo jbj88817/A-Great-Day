@@ -1,9 +1,9 @@
 package us.bojie.a_great_day.ui.add_edit_task
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,8 +12,9 @@ import us.bojie.a_great_day.data.Task
 import us.bojie.a_great_day.data.firebase.FirebaseManager
 import us.bojie.a_great_day.ui.MainActivity.Companion.EDIT_TASK_RESULT_OK
 
-class AddEditTaskViewModel @ViewModelInject constructor(
-    @Assisted private val state: SavedStateHandle,
+@HiltViewModel
+class AddEditTaskViewModel @Inject constructor(
+    private val state: SavedStateHandle,
     private val firebaseManager: FirebaseManager
 ) : ViewModel() {
 

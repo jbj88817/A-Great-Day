@@ -28,7 +28,7 @@ class TimeTaskAppWidgetProvider : AppWidgetProvider() {
         for (element in appWidgetIds) {
             // Create an Intent to launch MainActivity
             val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             // Get the layout for the App Widget and attach an on-click listener
             // to the button

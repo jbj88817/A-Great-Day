@@ -1,9 +1,10 @@
 package us.bojie.a_great_day.ui.time_task
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -12,7 +13,8 @@ import us.bojie.a_great_day.data.Task
 import us.bojie.a_great_day.data.firebase.FirebaseManager
 import us.bojie.a_great_day.util.Util
 
-class TimeTaskViewModel @ViewModelInject constructor(
+@HiltViewModel
+class TimeTaskViewModel @Inject constructor(
     private val firebaseManager: FirebaseManager
 ) : ViewModel() {
 
